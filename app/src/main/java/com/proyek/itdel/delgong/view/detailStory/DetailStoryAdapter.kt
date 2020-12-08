@@ -21,9 +21,8 @@ class DetailStoryAdapter(private val detailStory: Story, private val stories: Li
 
                 itemView.setOnClickListener {
                     val intent = Intent(this.context, PlayingStory::class.java)
-                    intent.putExtra("pathAudioPart", item.pathAudio)
-                    intent.putExtra("pathStoryPart", item.storiesValue)
-                    intent.putExtra("imagePathStory", detailStory.imgPath)
+                    intent.putParcelableArrayListExtra("listPartStory", detailStory.partStory)
+                    intent.putExtra("indexStory", item.indexStory)
                     intent.putExtra("titlePathStory", detailStory.title)
                     intent.putExtra("authorPartStory", detailStory.author)
                     context.startActivity(intent)

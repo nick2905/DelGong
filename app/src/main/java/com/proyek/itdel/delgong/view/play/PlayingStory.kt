@@ -1,13 +1,16 @@
 package com.proyek.itdel.delgong.view.play
 
+import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.proyek.itdel.delgong.R
+import com.proyek.itdel.delgong.model.local.PartStory
 import kotlinx.android.synthetic.main.activity_playing_story.*
 import kotlinx.coroutines.Runnable
 import kotlin.math.ceil
@@ -18,23 +21,71 @@ import kotlin.math.roundToLong
 class PlayingStory : AppCompatActivity(), Runnable {
     var mediaPlayer = MediaPlayer()
     var wasPlaying = false
-    private lateinit var nameFileAudio : String
+    private lateinit var nameFileAudio: String
     //private var nameFileAudio = "mama_antelope/mama_antelope.mp3"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_playing_story)
 
-        nameFileAudio = intent.getStringExtra("pathAudioPart")
+        var story = intent.getParcelableArrayListExtra<PartStory>("listPartStory")!!
+        var index = intent.getIntExtra("indexStory", 1)
+        var author = intent.getStringExtra("authorPartStory")
+        var title = intent.getStringExtra("titlePathStory")
 
-        authorNamePart.text = intent.getStringExtra("authorPartStory")
-        imgPartStory.setImageResource(intent.getIntExtra("imagePathStory",-1))
-        txtTitleStory.text = intent.getStringExtra("titlePathStory")
-        txtStoryPart.text = intent.getStringExtra("pathStoryPart")
+        val listIndexTotal = story.size
+
+        nameFileAudio = story[index - 1].pathAudio
+        txtStoryPart.text = story[index - 1].storiesValue
+        imgPartStory.setImageResource(story[index - 1].imgPartPath)
+
+        authorNamePart.text = author
+        txtTitleStory.text = title
 
         fab.setOnClickListener {
             playSong()
         }
+
+        imageButton.setOnClickListener {
+            onBackPressed()
+            finish()
+        }
+
+        previousBtn.setOnClickListener {
+            if (index == 1) {
+                Toast.makeText(this@PlayingStory, "This is the first part", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                index -= 1
+                val intent = Intent(this, PlayingStory::class.java)
+                intent.putParcelableArrayListExtra("listPartStory", story)
+                intent.putExtra("indexStory", index)
+                intent.putExtra("titlePathStory", title)
+                intent.putExtra("authorPartStory", author)
+                startActivity(intent)
+                this.overridePendingTransition(0, 0);
+                finish()
+            }
+        }
+
+        nextBtn.setOnClickListener {
+            if (index == listIndexTotal) {
+                Toast.makeText(this@PlayingStory, "This is the last part", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                index += 1
+                val intent = Intent(this, PlayingStory::class.java)
+                intent.putParcelableArrayListExtra("listPartStory", story)
+                intent.putExtra("indexStory", index)
+                intent.putExtra("titlePathStory", title)
+                intent.putExtra("authorPartStory", author)
+                startActivity(intent)
+                this.overridePendingTransition(0, 0);
+                finish()
+            }
+        }
+
+
         seekBar?.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onStartTrackingTouch(seekBar: SeekBar) {
                 seekBarHint.visibility = View.VISIBLE
@@ -97,7 +148,7 @@ class PlayingStory : AppCompatActivity(), Runnable {
                 fab!!.setImageDrawable(
                     ContextCompat.getDrawable(
                         this@PlayingStory,
-                        android.R.drawable.ic_media_pause
+                        R.drawable.baseline_stop_white_48dp
                     )
                 )
                 val descriptor = assets.openFd(nameFileAudio)

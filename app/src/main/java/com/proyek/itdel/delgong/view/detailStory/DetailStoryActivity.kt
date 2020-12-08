@@ -16,7 +16,7 @@ import java.lang.reflect.Field
 
 class DetailStoryActivity : AppCompatActivity() {
 
-    companion object{
+    companion object {
         const val EXTRA_STORY = "extra_story"
     }
 
@@ -38,10 +38,14 @@ class DetailStoryActivity : AppCompatActivity() {
         itemImgStory.setImageResource(story.imgPath)
         textView2.text = story.title
         txtAuthor.text = story.author
+        button.setOnClickListener {
+            onBackPressed()
+            finish()
+        }
 
         //Toast.makeText(this, pathListAudio, Toast.LENGTH_SHORT).show()
 
-        rvChaptersStory.apply{
+        rvChaptersStory.apply {
             setHasFixedSize(true)
             adapter = viewAdapter
             layoutManager = viewManager

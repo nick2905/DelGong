@@ -91,18 +91,18 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="24sp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:textColor="@color/colorBlack"
                 android:fontFamily="@font/roboto_bold"
-                android:text="Chapters"/>
+                android:text="Chapters"
+                android:textColor="@color/colorBlack"
+                android:textSize="24sp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvChaptersStory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:listitem="@layout/item_part_story"/>
+                tools:listitem="@layout/item_part_story" />
         </LinearLayout>
     </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
